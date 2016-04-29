@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdk:2.1.1-sdk'
+    compile 'ru.aviasales.template:aviasalesSdk:2.1.2-sdk'
 }
 ```
 
@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.1-sdk'
+    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.2-sdk'
 }
 ```
 
