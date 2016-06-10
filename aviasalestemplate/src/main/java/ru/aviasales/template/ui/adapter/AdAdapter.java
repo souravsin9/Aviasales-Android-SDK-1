@@ -102,13 +102,16 @@ public class AdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private int getCardsCountBeforeCurrentPosition(int position) {
 		int count = 0;
-		if (shouldShowAppodealAdBanner && APPODEAL_BANNER_POSITION < position) count++;
+		if (shouldShowAppodealAdBanner && APPODEAL_BANNER_POSITION + (shouldShowAsBanner ? 1 : 0) < position) {
+			count++;
+		}
 		if (shouldShowAsBanner && AS_BANNER_POSITION < position) count++;
 		return count;
 	}
 
 	private boolean isAppodealBanner(int position) {
-		return shouldShowAppodealAdBanner && APPODEAL_BANNER_POSITION == position;
+		return shouldShowAppodealAdBanner && APPODEAL_BANNER_POSITION == position -
+				(shouldShowAsBanner ? 1 : 0);
 	}
 
 	private boolean isAsBanner(int position) {
