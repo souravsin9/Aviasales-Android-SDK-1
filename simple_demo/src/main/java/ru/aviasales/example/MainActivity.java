@@ -11,11 +11,10 @@ import ru.aviasales.template.ui.fragment.AviasalesFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-	private AviasalesFragment aviasalesFragment;
-
-	// replace to your travel payout credentiials
+	// replace with your travel payout credentials
 	private final static String TRAVEL_PAYOUTS_MARKER = "your_travel_payouts_marker";
 	private final static String TRAVEL_PAYOUTS_TOKEN = "your_travel_payouts_token";
+	private AviasalesFragment aviasalesFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +23,15 @@ public class MainActivity extends AppCompatActivity {
 		AviasalesSDK.getInstance().init(this, new IdentificationData(TRAVEL_PAYOUTS_MARKER, TRAVEL_PAYOUTS_TOKEN));
 		setContentView(R.layout.activity_main);
 
-		init(savedInstanceState);
+		init();
 	}
 
-	private void init(Bundle savedInstanceState) {
+	private void init() {
 		initFragment();
 	}
 
 	private void initFragment() {
 		FragmentManager fm = getSupportFragmentManager();
-
 		aviasalesFragment = (AviasalesFragment) fm.findFragmentByTag(AviasalesFragment.TAG);
 
 		if (aviasalesFragment == null) {

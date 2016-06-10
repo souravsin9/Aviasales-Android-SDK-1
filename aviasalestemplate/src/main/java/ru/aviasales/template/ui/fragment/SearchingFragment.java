@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -15,11 +16,13 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
+import ru.aviasales.adsinterface.AdsInterface;
 import ru.aviasales.core.AviasalesSDK;
 import ru.aviasales.core.http.exception.ApiExceptions;
 import ru.aviasales.core.search.object.SearchData;
 import ru.aviasales.core.search.searching.SearchListener;
 import ru.aviasales.template.R;
+import ru.aviasales.template.ads.AdsImplKeeper;
 import ru.aviasales.template.filters.manager.FiltersManager;
 import ru.aviasales.template.utils.SortUtils;
 
@@ -29,6 +32,7 @@ public class SearchingFragment extends BaseFragment {
 	public static final int PROGRESS_BAR_LENGTH = 1000;
 
 	private ProgressBar progressBar;
+	private LinearLayout mrecContainer;
 	private boolean isPaused = false;
 
 	public static SearchingFragment newInstance() {
@@ -48,12 +52,24 @@ public class SearchingFragment extends BaseFragment {
 		showActionBar(true);
 		setTextToActionBar(getString(R.string.searching_information));
 		setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+		setUpMrecAd();
 
 		return rootView;
 	}
 
+	private void setUpMrecAd() {
+		AdsInterface adsInterface = AdsImplKeeper.getInstance().getAdsInterface();
+		View mrecView = adsInterface.getMrecView(getActivity());
+		if (mrecView != null) {
+			mrecContainer.addView(mrecView);
+			adsInterface.showWaitingScreenAdsIfAvailable(getActivity());
+		}
+	}
+
 	private void setupViews(View rootView) {
 		progressBar = (ProgressBar) rootView.findViewById(R.id.pb_searching);
+		mrecContainer = (LinearLayout) rootView.findViewById(R.id.mrec_container);
+
 		progressBar.setMax(PROGRESS_BAR_LENGTH);
 	}
 

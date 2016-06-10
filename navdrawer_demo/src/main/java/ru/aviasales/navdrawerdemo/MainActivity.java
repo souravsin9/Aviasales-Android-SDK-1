@@ -23,9 +23,10 @@ public class MainActivity extends AppCompatActivity
 
 	private AviasalesFragment aviasalesFragment;
 
-	// replace to your travel payout credentiials
+	// replace with your travel payout credentiials
 	private final static String TRAVEL_PAYOUTS_MARKER = "your_travel_payouts_marker";
 	private final static String TRAVEL_PAYOUTS_TOKEN = "your_travel_payouts_token";
+	private final static String APPODEAL_APP_KEY = "your_appodeal_app_key";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

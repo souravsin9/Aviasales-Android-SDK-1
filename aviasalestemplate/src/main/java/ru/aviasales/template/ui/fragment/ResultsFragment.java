@@ -17,17 +17,22 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import ru.aviasales.adsinterface.AdsInterface;
 import ru.aviasales.core.AviasalesSDK;
+import ru.aviasales.core.ads.AdsManager;
 import ru.aviasales.core.search.object.Proposal;
 import ru.aviasales.core.search.object.SearchData;
 import ru.aviasales.core.search.params.SearchParams;
 import ru.aviasales.template.R;
+import ru.aviasales.template.ads.AdsImplKeeper;
 import ru.aviasales.template.currencies.Currency;
 import ru.aviasales.template.filters.manager.FiltersManager;
 import ru.aviasales.template.proposal.ProposalManager;
+import ru.aviasales.template.ui.adapter.AdAdapter;
 import ru.aviasales.template.ui.adapter.ResultsRecycleViewAdapter;
 import ru.aviasales.template.ui.dialog.CurrencyFragmentDialog;
 import ru.aviasales.template.ui.dialog.ResultsSortingDialog;
+import ru.aviasales.template.utils.BrowserUtils;
 import ru.aviasales.template.utils.CurrencyUtils;
 import ru.aviasales.template.utils.SortUtils;
 import ru.aviasales.template.utils.StringUtils;
@@ -37,6 +42,7 @@ public class ResultsFragment extends BaseFragment {
 	private static int resultsCount = -1;
 
 	private ResultsRecycleViewAdapter resultsAdapter;
+	private AdAdapter adAdapter;
 
 	private View rootView;
 	private RecyclerView resultsListView;
@@ -74,6 +80,7 @@ public class ResultsFragment extends BaseFragment {
 	@Override
 	public void onDestroyView() {
 		resultsAdapter = null;
+		adAdapter = null;
 		super.onDestroyView();
 	}
 
@@ -94,11 +101,11 @@ public class ResultsFragment extends BaseFragment {
 
 	private void setUpListView(RecyclerView listView) {
 
-		final ResultsRecycleViewAdapter adapter = createOrRefreshAdapter();
+		final ResultsRecycleViewAdapter proposalsAdapter = createOrRefreshAdapter();
+		adAdapter = createAdAdapter(proposalsAdapter);
+		listView.setAdapter(adAdapter);
 
-		listView.setAdapter(adapter);
-
-		adapter.setListener(new ResultsRecycleViewAdapter.OnClickListener() {
+		proposalsAdapter.setListener(new ResultsRecycleViewAdapter.OnClickListener() {
 			@Override
 			public void onClick(final Proposal proposal, int position) {
 				if (getActivity() == null) return;
@@ -106,7 +113,22 @@ public class ResultsFragment extends BaseFragment {
 				showDetails(proposal);
 			}
 		});
-		adapter.sortProposals(SortUtils.getSavedSortingType());
+		proposalsAdapter.sortProposals(SortUtils.getSavedSortingType());
+	}
+
+	private AdAdapter createAdAdapter(ResultsRecycleViewAdapter adapter) {
+		AdAdapter adAdapter = new AdAdapter(adapter, new AdsManager.AdListener() {
+			@Override
+			public void onAdBannerPressed() {
+				AdsManager instance = AdsManager.getInstance();
+				BrowserUtils.openBrowser(getActivity(), instance.getFullAdsUrl(), instance.getResultsAdsBrowserTitle(), false);
+			}
+		});
+		AdsInterface adsInterface = AdsImplKeeper.getInstance().getAdsInterface();
+		adAdapter.setShouldShowAppodealAdBanner(adsInterface.isResultsAdsEnabled() && adsInterface.areResultsReadyToShow());
+		AdsManager adsManager = AdsManager.getInstance();
+		adAdapter.setShouldShowAsBanner(adsManager.needToShowAdsOnResults() && adsManager.isWebViewLoaded());
+		return adAdapter;
 	}
 
 	private ResultsRecycleViewAdapter createOrRefreshAdapter() {
@@ -262,5 +284,4 @@ public class ResultsFragment extends BaseFragment {
 			resultsCount = resultsAdapter.getItemCount();
 		}
 	}
-
 }
