@@ -191,4 +191,3 @@ For more information see the [demo project](https://github.com/KosyanMedia/Avias
 
 [1]: /screenshots/screen.gif "Screenshot1"
 [2]: /screenshots/Screenshot_ads1.png "Screenshot2"
-[3]: /screenshots/Screenshot_ads2.png "Screenshot3"
