@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdk:2.1.1-sdk'
+    compile 'ru.aviasales.template:aviasalesSdk:2.1.3-sdk'
 }
 ```
 
@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.1-sdk'
+    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.3-sdk'
 }
 ```
 
@@ -178,6 +178,11 @@ Also you can change background and price tag colors
 	<color name="aviasales_price_color">@color/yellow_FDCC50</color>
 ```
 
+### Appodeal ads 
+We integrated appodeal advertising 
+
+![][2]
+
 For more information see the [demo project](https://github.com/KosyanMedia/Aviasales-Android-SDK/tree/master/simple_demo)
 
 ### [Aviasales Android API](https://github.com/KosyanMedia/Aviasales-Android-SDK/wiki/Aviasales-Android-SDK-API-documentation)
@@ -185,3 +190,5 @@ For more information see the [demo project](https://github.com/KosyanMedia/Avias
 
 
 [1]: /screenshots/screen.gif "Screenshot1"
+[2]: /screenshots/Screenshot_ads1.png "Screenshot2"
+[3]: /screenshots/Screenshot_ads2.png "Screenshot3"
