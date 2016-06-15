@@ -14,13 +14,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "ru.aviasales.example"
         minSdkVersion 11
-        targetSdkVersion 23
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.1"
     }
@@ -45,5 +45,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':aviasalestemplate')
 
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile "com.google.android.gms:play-services-ads:$rootProject.ext.gmsVersion"
 }
