@@ -181,7 +181,7 @@ Also you can change background and price tag colors
 For more information see the [demo project](https://github.com/KosyanMedia/Aviasales-Android-SDK/tree/master/simple_demo)
 
 ### Appodeal ads 
-You can implement [Appodeal ads](http://www.appodeal.ru/) in your app and and get revenue from ads (available from Aviasales SDK v.2.1.3) 
+You can implement [Appodeal ads](http://www.appodeal.ru/) in your app and and get revenue from them (available from Aviasales SDK v.2.1.3) 
 
 ![][2]
 
