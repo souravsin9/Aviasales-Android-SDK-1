@@ -243,7 +243,7 @@ public class ResultsFragment extends BaseFragment {
 				AviasalesSDK.getInstance().getSearchParamsOfLastSearch().isComplexSearch(), new ResultsSortingDialog.OnSortingChangedListener() {
 					@Override
 					public void onSortingChanged(int sortingType) {
-						resultsListView.setAdapter(resultsAdapter);
+						resultsListView.setAdapter(adAdapter);
 						resultsAdapter.sortProposals(sortingType);
 						dismissDialog();
 					}
