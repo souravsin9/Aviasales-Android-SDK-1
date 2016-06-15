@@ -204,7 +204,7 @@ And then initialize it
 		AdsImplKeeper.getInstance().setCustomAdsInterfaceImpl(ads); // assign your appodeal
 ```
 
-For more information about appodal ads see the [Aviasales Appodeal integration](https://github.com/KosyanMedia/Aviasales-Android-SDK/wiki/Template-project-screens) and [ads demo project](https://github.com/KosyanMedia/Aviasales-Android-SDK/tree/master/ads_simple_demo)
+For more information about appodal ads see the [ads demo project](https://github.com/KosyanMedia/Aviasales-Android-SDK/tree/master/ads_simple_demo)
 
 
 ### [Aviasales Android API](https://github.com/KosyanMedia/Aviasales-Android-SDK/wiki/Aviasales-Android-SDK-API-documentation)
