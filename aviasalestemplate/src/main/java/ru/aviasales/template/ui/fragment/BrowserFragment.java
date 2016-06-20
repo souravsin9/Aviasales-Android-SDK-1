@@ -37,8 +37,8 @@ public class BrowserFragment extends BaseFragment {
 
 	public static final String URL = "BROWSER_URL";
 	public static final String TITLE = "BROWSER_TITLE";
-	private static final String REFERER_HEADER = "Referer";
-	private static final String HTTP = "http://";
+	public static final String REFERER_HEADER = "Referer";
+	public static final String HTTP = "http://";
 
 	private boolean needToDismissDialog = false;
 	private WebView webView;
