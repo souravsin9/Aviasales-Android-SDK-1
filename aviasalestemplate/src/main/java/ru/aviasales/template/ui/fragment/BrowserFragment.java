@@ -24,6 +24,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,6 +37,8 @@ public class BrowserFragment extends BaseFragment {
 
 	public static final String URL = "BROWSER_URL";
 	public static final String TITLE = "BROWSER_TITLE";
+	private static final String REFERER_HEADER = "Referer";
+	private static final String HTTP = "http://";
 
 	private boolean needToDismissDialog = false;
 	private WebView webView;
@@ -42,6 +46,7 @@ public class BrowserFragment extends BaseFragment {
 
 	private BrowserLoadingDialogFragment dialog;
 	private String title;
+	private String host;
 	private boolean loadingFinished = false;
 	private MenuItem btnBack;
 	private MenuItem btnForward;
@@ -50,12 +55,13 @@ public class BrowserFragment extends BaseFragment {
 	private boolean showLoadingDialog = false;
 
 	public static BrowserFragment newInstance() {
-		return newInstance(false);
+		return newInstance(false, null);
 	}
 
-	public static BrowserFragment newInstance(boolean showLoadingDialog) {
+	public static BrowserFragment newInstance(boolean showLoadingDialog, String host) {
 		BrowserFragment browserFragment = new BrowserFragment();
 		browserFragment.setShowLoadingDialog(showLoadingDialog);
+		browserFragment.setHost(host);
 		return browserFragment;
 	}
 
@@ -158,7 +164,11 @@ public class BrowserFragment extends BaseFragment {
 
 			webView.getSettings().setSupportMultipleWindows(true);
 
-			webView.loadUrl(url);
+			if (host != null) {
+				webView.loadUrl(url, getRefererHeader());
+			} else {
+				webView.loadUrl(url);
+			}
 		} else {
 			if (webView.getParent() != null) {
 				((ViewGroup) webView.getParent()).removeView(webView);
@@ -167,6 +177,12 @@ public class BrowserFragment extends BaseFragment {
 
 		webViewPlaceHolder.removeAllViews();
 		webViewPlaceHolder.addView(webView);
+	}
+
+	private Map<String, String> getRefererHeader() {
+		Map<String, String> map = new HashMap<>();
+		map.put(REFERER_HEADER, HTTP + host);
+		return map;
 	}
 
 	private ViewGroup.LayoutParams getWebViewLayoutParams() {
@@ -295,6 +311,10 @@ public class BrowserFragment extends BaseFragment {
 		} else {
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	private class AsWebViewClient extends WebViewClient {

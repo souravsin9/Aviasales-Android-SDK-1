@@ -14,6 +14,7 @@ public class BrowserUtils {
 	public static void openBrowser(@Nullable Activity activity,
 	                               @Nullable String url,
 	                               @Nullable String title,
+	                               @Nullable String host,
 	                               boolean showLoadingDialog) {
 		if (activity == null || url == null || title == null) return;
 
@@ -23,7 +24,7 @@ public class BrowserUtils {
 					.putString(BrowserFragment.URL, url)
 					.putString(BrowserFragment.TITLE, title)
 					.commit();
-			launchInternalBrowser(activity, showLoadingDialog);
+			launchInternalBrowser(activity, showLoadingDialog, host);
 		} else {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));
@@ -31,9 +32,10 @@ public class BrowserUtils {
 		}
 	}
 
-	private static void launchInternalBrowser(Activity activity, boolean showLoadingDialog) {
+	private static void launchInternalBrowser(Activity activity, boolean showLoadingDialog, String host) {
 		Intent intent = new Intent(activity, BrowserActivity.class);
 		intent.putExtra(BrowserActivity.SHOW_LOADING_DIALOG, showLoadingDialog);
+		intent.putExtra(BrowserActivity.HOST, host);
 		activity.startActivity(intent);
 	}
 }

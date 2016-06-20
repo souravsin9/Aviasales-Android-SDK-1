@@ -121,7 +121,7 @@ public class ResultsFragment extends BaseFragment {
 			@Override
 			public void onAdBannerPressed() {
 				AdsManager instance = AdsManager.getInstance();
-				BrowserUtils.openBrowser(getActivity(), instance.getFullAdsUrl(), instance.getResultsAdsBrowserTitle(), false);
+				BrowserUtils.openBrowser(getActivity(), instance.getFullAdsUrl(), instance.getResultsAdsBrowserTitle(), null, false);
 			}
 		});
 		AdsInterface adsInterface = AdsImplKeeper.getInstance().getAdsInterface();

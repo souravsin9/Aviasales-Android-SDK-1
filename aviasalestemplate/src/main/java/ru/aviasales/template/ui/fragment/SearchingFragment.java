@@ -1,5 +1,9 @@
 package ru.aviasales.template.ui.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,9 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.ValueAnimator;
 
 import ru.aviasales.adsinterface.AdsInterface;
 import ru.aviasales.core.AviasalesSDK;
@@ -147,6 +148,7 @@ public class SearchingFragment extends BaseFragment {
 			progressAnimator.setDuration(ANIMATION_FINISH_DURATION);
 			progressAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 			progressAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 				@Override
 				public void onAnimationUpdate(ValueAnimator animation) {
 					int progress = (Integer) animation.getAnimatedValue();

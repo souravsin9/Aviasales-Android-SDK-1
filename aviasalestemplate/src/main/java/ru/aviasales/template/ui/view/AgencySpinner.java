@@ -6,12 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 
 import java.util.List;
 import java.util.Map;
 
 import ru.aviasales.core.search.object.GateData;
+import ru.aviasales.core.search.object.Proposal;
 import ru.aviasales.template.R;
 import ru.aviasales.template.ui.adapter.AgencySpinnerAdapter;
 
@@ -57,8 +57,8 @@ public class AgencySpinner extends FrameLayout {
 
 	}
 
-	public void setupAgencies(List<String> agencies, Map<String, GateData> gates) {
-		final AgencySpinnerAdapter agencyAdapter = new AgencySpinnerAdapter(agencies, gates);
+	public void setupAgencies(List<String> agencies, Map<String, GateData> gates, Proposal proposal) {
+		final AgencySpinnerAdapter agencyAdapter = new AgencySpinnerAdapter(agencies, gates, proposal);
 
 		if (agencies.size() == 1) {
 			spinnerContainer.setVisibility(View.GONE);

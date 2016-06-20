@@ -24,6 +24,7 @@ import ru.aviasales.core.search.object.Proposal;
 import ru.aviasales.core.search.object.SearchData;
 import ru.aviasales.core.search.params.SearchParams;
 import ru.aviasales.core.search.searching.SimpleSearchListener;
+import ru.aviasales.core.utils.CoreDefined;
 import ru.aviasales.template.R;
 import ru.aviasales.template.proposal.ProposalManager;
 import ru.aviasales.template.ui.dialog.ProgressDialogWindow;
@@ -112,17 +113,13 @@ public class TicketDetailsFragment extends BaseFragment {
 	private void setUpAgencySpinner(ViewGroup layout) {
 		AgencySpinner agencySpinner = (AgencySpinner) layout.findViewById(R.id.agency_spinner);
 
-		String agencyName = ProposalManager.getInstance().getAgencyName(ProposalManager.getInstance().getAgenciesCodes().get(0));
-
-		TextView agencyNameTextView = (TextView) layout.findViewById(R.id.agency_text_name);
-		agencyNameTextView.setText(String.format(getString(R.string.ticket_title_agency), agencyName));
-
-		if (ProposalManager.getInstance().getAgenciesCodes().size() == 1) {
+		ProposalManager proposalManager = ProposalManager.getInstance();
+		if (proposalManager.getAgenciesCodes().size() == 1) {
 			agencySpinner.setVisibility(View.GONE);
 		} else {
 			agencySpinner.setVisibility(View.VISIBLE);
 
-			agencySpinner.setupAgencies(ProposalManager.getInstance().getAgenciesCodes(), ProposalManager.getInstance().getGates());
+			agencySpinner.setupAgencies(proposalManager.getAgenciesCodes(), proposalManager.getGates(), proposalManager.getProposal());
 			agencySpinner.setOnAgencyClickedListener(new AgencySpinner.OnAgencyClickedListener() {
 				@Override
 				public void onAgencyClick(String agency, int position) {
@@ -171,13 +168,15 @@ public class TicketDetailsFragment extends BaseFragment {
 
 	private void setBuyBtn(ViewGroup layout, final OnAgencySelected buyListener) {
 		Button buyButton = (Button) layout.findViewById(R.id.btn_buy);
-		buyButton.setTag(ProposalManager.getInstance().getAgenciesCodes().get(0));
+		String agencyKey = ProposalManager.getInstance().getAgenciesCodes().get(0);
+		buyButton.setTag(agencyKey);
 		buyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				buyListener.onClick(view, false);
 			}
 		});
+		buyButton.setText(getString(R.string.ticket_buy_btn_txt_full) + " " + String.format(getString(R.string.ticket_title_agency), getAgencyName(agencyKey)));
 	}
 
 	protected Map<String, AirportData> getAirports() {
@@ -216,7 +215,11 @@ public class TicketDetailsFragment extends BaseFragment {
 	}
 
 	protected void openBrowser(String url, String gateKey) {
-		BrowserUtils.openBrowser(getActivity(), url, String.format(getString(R.string.browser_title), getAgencyName(gateKey)), true);
+		BrowserUtils.openBrowser(getActivity(), url, String.format(getString(R.string.browser_title), getAgencyName(gateKey)), getSdkHost(), true);
+	}
+
+	private String getSdkHost() {
+		return CoreDefined.getHost(getActivity()).replace(".sdk", "");
 	}
 
 	private boolean checkTimeAndShowDialogIfNeed() {

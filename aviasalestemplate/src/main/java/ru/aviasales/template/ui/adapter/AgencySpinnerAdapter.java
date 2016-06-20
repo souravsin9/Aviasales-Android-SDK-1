@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.aviasales.core.search.object.GateData;
+import ru.aviasales.core.search.object.Proposal;
 import ru.aviasales.template.R;
 import ru.aviasales.template.proposal.ProposalManager;
 import ru.aviasales.template.ui.view.AgencyItemView;
@@ -19,11 +20,13 @@ public class AgencySpinnerAdapter implements SpinnerAdapter {
 
 	private final List<String> agencies;
 	private final Map<String, GateData> gates;
+	private final Proposal proposal;
 	private OnAgencyClickListener onAgencyClickListener;
 
-	public AgencySpinnerAdapter(List<String> agenciesCodes, Map<String, GateData> gates) {
+	public AgencySpinnerAdapter(List<String> agenciesCodes, Map<String, GateData> gates, Proposal proposal) {
 		agencies = agenciesCodes;
 		this.gates = gates;
+		this.proposal = proposal;
 	}
 
 	@Override
@@ -40,6 +43,25 @@ public class AgencySpinnerAdapter implements SpinnerAdapter {
 	public View getDropDownView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.agency_item_layout, parent, false);
+			boolean hasMobileAgency = false;
+			long maxPrice = Integer.MIN_VALUE;
+			String maxPriceAgency = "";
+			for (String agency : agencies) {
+				Long price = proposal.getTerms().get(agency).getUnifiedPrice();
+				if (maxPrice < price) {
+					maxPrice = price;
+					maxPriceAgency = agency;
+				}
+				hasMobileAgency = gates.get(agency).hasMobileVersion();
+			}
+
+			((AgencyItemView) convertView).setAgencyNamePaddingRight(hasMobileAgency ?
+					convertView.getContext().getResources().getDimensionPixelSize(R.dimen.mobile_agency_padding_right_with_mobile_agency) :
+					convertView.getContext().getResources().getDimensionPixelSize(R.dimen.mobile_agency_padding_right_without_mobile_agency));
+
+			((AgencyItemView) convertView).setAgencyMarginLeft(((AgencyItemView) convertView).getPriceWidth(maxPriceAgency) +
+					convertView.getContext().getResources().getDimensionPixelSize(R.dimen.ticket_details_agency_name_margin_left_from_price) +
+					convertView.getContext().getResources().getDimensionPixelSize(R.dimen.ticket_details_agency_price_margin_left));
 		}
 		((AgencyItemView) convertView).setData(agencies.get(position),
 				gates.get(agencies.get(position)).hasMobileVersion());
