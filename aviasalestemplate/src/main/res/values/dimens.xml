@@ -50,4 +50,10 @@
 
 	<dimen name="button_with_corners_radius">2dp</dimen>
 
+	<dimen name="ticket_details_agency_name_margin_left_from_price">14dp</dimen>
+	<dimen name="ticket_details_agency_price_margin_left">26dp</dimen>
+	<dimen name="mobile_agency_padding_right_with_mobile_agency">40dp</dimen>
+	<dimen name="mobile_agency_padding_right_without_mobile_agency">24dp</dimen>
+
+
 </resources>

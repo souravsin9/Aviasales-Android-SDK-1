@@ -4,9 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
-
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,9 +89,9 @@ public class DateUtils {
 
 	public static boolean isDateBeforeDateShiftLine(Calendar checkDate) {
 		// We don't use -12 because no any airports in that zone
-		LocalDate todayInShiftTimezone = new LocalDate(DateTimeZone.forID(MIN_AIRPORT_TIME_ZONE));
-		LocalDate checkLocalDate = LocalDate.fromCalendarFields(checkDate);
-		return checkLocalDate.isBefore(todayInShiftTimezone);
+		Calendar todayCalendar = getTodayInLastTimezone();
+		return todayCalendar.get(Calendar.ZONE_OFFSET) + todayCalendar.getTimeInMillis() >
+				checkDate.get(Calendar.ZONE_OFFSET) + checkDate.getTimeInMillis();
 	}
 
 	public static boolean isDateBeforeDateShiftLine(Date date) {
@@ -103,10 +100,25 @@ public class DateUtils {
 		return isDateBeforeDateShiftLine(checkDate);
 	}
 
+	public static Calendar getTodayInLastTimezone() {
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-11"));
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+
 	public static boolean isDateBeforeDateShiftLine(String checkDate) {
-		LocalDate todayInShiftTimezone = new LocalDate(DateTimeZone.forID(MIN_AIRPORT_TIME_ZONE));
-		LocalDate checkLocalDate = LocalDate.parse(checkDate);
-		return checkLocalDate.isBefore(todayInShiftTimezone);
+		// We don't use -12 because no any airports in that zone
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			calendar.setTime(simpleDateFormat.parse(checkDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return isDateBeforeDateShiftLine(calendar);
 	}
 
 	public static Date getAmPmTime(Integer hr, Integer min) {

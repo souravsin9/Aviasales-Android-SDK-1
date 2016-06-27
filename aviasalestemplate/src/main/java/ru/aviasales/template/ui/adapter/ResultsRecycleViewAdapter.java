@@ -6,17 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.aviasales.core.search.object.Proposal;
 import ru.aviasales.template.R;
 import ru.aviasales.template.ui.view.ResultsItemView;
 import ru.aviasales.template.utils.SortUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class ResultsRecycleViewAdapter extends RecyclerView.Adapter<ResultsRecycleViewAdapter.ViewHolder> {
-
+public class ResultsRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private final Context context;
 	private List<Proposal> proposals = new ArrayList<>();
 	private boolean isComplexSearch;
@@ -33,17 +31,22 @@ public class ResultsRecycleViewAdapter extends RecyclerView.Adapter<ResultsRecyc
 	}
 
 	@Override
-	public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View itemView = LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.result_item, parent, false);
-		return new ViewHolder(itemView);
+		return new ProposalViewHolder(itemView);
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-		viewHolder.resultsItemView.setProposal(getItem(position), context, isComplexSearch);
-		viewHolder.resultsItemView.setAlternativePrice(getItem(position).getTotalWithFilters());
-		viewHolder.resultsItemView.setOnClickListener(new View.OnClickListener() {
+	public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
+		bindProposalView((ProposalViewHolder) viewHolder, position);
+	}
+
+	private void bindProposalView(final ProposalViewHolder viewHolder, final int position) {
+		ResultsItemView itemView = viewHolder.resultsItemView;
+		itemView.setProposal(getItem(position), context, isComplexSearch);
+		itemView.setAlternativePrice(getItem(position).getTotalWithFilters());
+		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (listener != null) {
@@ -51,7 +54,6 @@ public class ResultsRecycleViewAdapter extends RecyclerView.Adapter<ResultsRecyc
 				}
 			}
 		});
-
 	}
 
 	@Override
@@ -67,13 +69,14 @@ public class ResultsRecycleViewAdapter extends RecyclerView.Adapter<ResultsRecyc
 		return proposals.get(i);
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder {
-		public ResultsItemView resultsItemView;
+	public static class ProposalViewHolder extends RecyclerView.ViewHolder {
+		ResultsItemView resultsItemView;
 
-		public ViewHolder(View itemView) {
+		public ProposalViewHolder(View itemView) {
 			super(itemView);
 			resultsItemView = (ResultsItemView) itemView.findViewById(R.id.cv_results_item);
 		}
+
 	}
 
 	public void setListener(OnClickListener listener) {

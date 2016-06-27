@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ru.aviasales.core.AviasalesSDK;
 import ru.aviasales.core.locale.LocaleUtil;
@@ -31,18 +33,16 @@ import ru.aviasales.template.ui.listener.OnPlaceSelectedListener;
 
 public class SelectAirportFragment extends BaseFragment {
 
-	private OnPlaceSelectedListener onPlaceSelectedListener;
-
+	public static final int TYPE_DESTINATION = 301;
+	public static final int TYPE_ORIGIN = 302;
 	private static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";
 	private static final String EXTRA_IS_COMPLEX_SEARCH = "extra_is_complex_search";
 	private static final String EXTRA_SEGMENT_NUMBER = "extra_segment_number";
 	private static final String EXTRA_PLACES_CONTENT = "extra_places_content";
 	private static final String EXTRA_KEYBOARD_HIDDEN = "extra_keyboard_hidden";
+	private static final int PLACES_SERVER_SEARCH_DELAY = 200;
 
-
-	public static final int TYPE_DESTINATION = 301;
-	public static final int TYPE_ORIGIN = 302;
-
+	private OnPlaceSelectedListener onPlaceSelectedListener;
 	private RecyclerView recyclerView;
 	private EditText editText;
 	private SelectAirportAdapter adapter;
@@ -54,6 +54,21 @@ public class SelectAirportFragment extends BaseFragment {
 	private int requestCode = TYPE_ORIGIN;
 	private boolean isComplexSearch;
 	private Integer segmentNumber;
+	private final View.OnClickListener onAirportSelectedListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			PlaceData placeData = (PlaceData) view.getTag();
+
+			if (placeData == null || getActivity() == null) return;
+			hideKeyboard();
+
+			onAirportSelected(placeData);
+			getActivity().onBackPressed();
+
+		}
+	};
+	private Timer timer;
+	private TimerTask timerTask;
 
 	public static SelectAirportFragment newInstance(int fragmentType, boolean isComplexSearch, int segmentNumber) {
 		SelectAirportFragment selectAirportFragment = new SelectAirportFragment();
@@ -64,22 +79,6 @@ public class SelectAirportFragment extends BaseFragment {
 		selectAirportFragment.setArguments(bundle);
 		return selectAirportFragment;
 	}
-
-
-	private final View.OnClickListener onAirportSelectedListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			PlaceData placeData = (PlaceData) view.getTag();
-
-			if (placeData == null || getActivity() == null) return;
-			hideKeyboard();
-
-			onAirportSelected(placeData);
-
-			getActivity().onBackPressed();
-
-		}
-	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +115,14 @@ public class SelectAirportFragment extends BaseFragment {
 
 	@Override
 	public void onDestroyView() {
+		if (timerTask != null) {
+			timerTask.cancel();
+		}
+		if (timer != null) {
+			timer.cancel();
+			timer.purge();
+			timer = null;
+		}
 
 		if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
 			((AppCompatActivity) getActivity()).getSupportActionBar().hide();
@@ -197,37 +204,13 @@ public class SelectAirportFragment extends BaseFragment {
 			@Override
 			public void afterTextChanged(Editable editable) {
 
-				placesFromServer = new ArrayList<PlaceData>();
+				placesFromServer = new ArrayList<>();
 
 				if (editable.length() > 0) {
 					infoAdapter.setInfoViewActive(true);
 					infoAdapter.setInfoText(null);
 					updateAdapter();
-					SearchByNameParams params = setSearchByNameParams();
-
-					AviasalesSDK.getInstance().startPlacesSearch(params, new OnSearchPlacesListener() {
-						@Override
-						public void onSuccess(List<PlaceData> placeDates) {
-							placesFromServer = placeDates;
-
-							if (placesFromServer.isEmpty()) {
-								infoAdapter.setInfoViewActive(true);
-								infoAdapter.setInfoText(R.string.destination_no_results);
-							} else {
-								infoAdapter.setInfoViewActive(false);
-								infoAdapter.setInfoText(null);
-							}
-							updateAdapter();
-						}
-
-						@Override
-						public void onCanceled() {
-						}
-
-						@Override
-						public void onError(int errorCode, int responseCode, String searchId) {
-						}
-					});
+					setTimerToSearchPlacesOnServer();
 				} else {
 					AviasalesSDK.getInstance().cancelPlacesSearch();
 					infoAdapter.setInfoViewActive(false);
@@ -239,6 +222,51 @@ public class SelectAirportFragment extends BaseFragment {
 
 		createRecyclerViewAdapter();
 
+	}
+
+	private void setTimerToSearchPlacesOnServer() {
+		if (timer == null) {
+			timer = new Timer();
+		} else {
+			if (timerTask != null) timerTask.cancel();
+			timer.purge();
+		}
+
+		final Runnable updatePlaces = new Runnable() {
+			public void run() {
+				if (placesFromServer.isEmpty()) {
+					infoAdapter.setInfoViewActive(true);
+					infoAdapter.setInfoText(R.string.destination_no_results);
+				} else {
+					infoAdapter.setInfoViewActive(false);
+					infoAdapter.setInfoText(null);
+				}
+				updateAdapter();
+			}
+		};
+
+		timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				AviasalesSDK.getInstance().startPlacesSearch(setSearchByNameParams(), new OnSearchPlacesListener() {
+					@Override
+					public void onSuccess(List<PlaceData> placeDates) {
+						placesFromServer = placeDates;
+						getActivity().runOnUiThread(updatePlaces);
+					}
+
+					@Override
+					public void onCanceled() {
+					}
+
+					@Override
+					public void onError(int errorCode, int responseCode, String searchId) {
+					}
+				});
+			}
+		};
+
+		timer.schedule(timerTask, PLACES_SERVER_SEARCH_DELAY);
 	}
 
 	private SearchByNameParams setSearchByNameParams() {
@@ -267,7 +295,6 @@ public class SelectAirportFragment extends BaseFragment {
 		if (getActivity() == null) return;
 		adapter.setAirports(placesFromServer);
 		infoAdapter.notifyDataSetChanged();
-
 	}
 
 	private void showKeyboardAndFocusOnEditText() {

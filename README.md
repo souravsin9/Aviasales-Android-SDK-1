@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdk:2.1.1-sdk'
+    compile 'ru.aviasales.template:aviasalesSdk:2.1.3-sdk'
 }
 ```
 
@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.1-sdk'
+    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.3-sdk'
 }
 ```
 
@@ -180,8 +180,36 @@ Also you can change background and price tag colors
 
 For more information see the [demo project](https://github.com/KosyanMedia/Aviasales-Android-SDK/tree/master/simple_demo)
 
+### Appodeal ads 
+You can implement [Appodeal ads](http://www.appodeal.ru/) in your app and and get revenue from them (available from Aviasales SDK v.2.1.3) 
+
+![][2]
+
+To add Appodeal Ads to your project just add additional maven dependency:
+
+```gradle
+dependencies {
+    compile 'ru.aviasales:appodeallib:1.2'
+}
+```
+
+And then initialize it 
+
+```java
+		AppodealAds ads = new AppodealAds(); 
+		ads.setStartAdsEnabled(SHOW_ADS_ON_START); // ads on start (true/false)
+		ads.setWaitingScreenAdsEnabled(SHOW_ADS_ON_WAITING_SCREEN); // ads on waiting screen (true/false)
+		ads.setResultsAdsEnabled(SHOW_ADS_ON_SEARCH_RESULTS); // ads on results (true/false)
+		ads.init(this, APPODEAL_APP_KEY);  // your appodeal key
+		AdsImplKeeper.getInstance().setCustomAdsInterfaceImpl(ads); // assign your appodeal
+```
+
+For more information about appodal ads see the [ads demo project](https://github.com/KosyanMedia/Aviasales-Android-SDK/tree/master/ads_simple_demo)
+
+
 ### [Aviasales Android API](https://github.com/KosyanMedia/Aviasales-Android-SDK/wiki/Aviasales-Android-SDK-API-documentation)
 ### [Template project screens](https://github.com/KosyanMedia/Aviasales-Android-SDK/wiki/Template-project-screens)
 
 
 [1]: /screenshots/screen.gif "Screenshot1"
+[2]: /screenshots/Screenshot_ads1.png "Screenshot2"

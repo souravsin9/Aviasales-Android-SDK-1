@@ -75,4 +75,24 @@ public class AgencyItemView extends RelativeLayout {
 		return agency;
 	}
 
+	public int getPriceWidth(String agency) {
+		tvBestPrice.setText(StringUtils.formatPriceInAppCurrency(ProposalManager.getInstance().getAgencyPrice(agency), getContext()));
+		tvBestPrice.measure(0, 0);
+		return tvBestPrice.getMeasuredWidth();
+	}
+
+	public void setAgencyMarginLeft(int marginLeft) {
+		LayoutParams params = (LayoutParams) tvBestAgency.getLayoutParams();
+		params.setMargins(marginLeft,
+				params.topMargin,
+				params.rightMargin,
+				params.bottomMargin);
+	}
+
+	public void setAgencyNamePaddingRight(int paddingRight) {
+		tvBestAgency.setPadding(tvBestAgency.getPaddingLeft(),
+				tvBestAgency.getPaddingTop(),
+				paddingRight,
+				tvBestAgency.getPaddingBottom());
+	}
 }
