@@ -18,7 +18,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "trend.avia"
+        applicationId "ru.aviasales.ads_example"
         minSdkVersion 11
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
