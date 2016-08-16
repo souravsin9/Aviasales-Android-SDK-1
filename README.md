@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.3-sdk'
+    compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.4-sdk'
 }
 ```
 
@@ -189,7 +189,7 @@ To add Appodeal Ads to your project just add additional maven dependency:
 
 ```gradle
 dependencies {
-    compile 'ru.aviasales:appodeallib:1.2'
+    compile 'ru.aviasales:appodeallib:1.3'
 }
 ```
 
