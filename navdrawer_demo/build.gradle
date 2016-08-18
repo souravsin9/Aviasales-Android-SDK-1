@@ -35,6 +35,6 @@ dependencies {
 	testCompile 'junit:junit:4.12'
 	compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
 	compile "com.android.support:design:$rootProject.ext.supportVersion"
-//	compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.3-sdk'
+//	compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.5-sdk'
 	compile project(':aviasalestemplate')
 }
