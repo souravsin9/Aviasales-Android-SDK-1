@@ -47,7 +47,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile project(':appodeallib')
     compile project(':aviasalestemplate')
-//	compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.5-sdk'
+//	compile 'ru.aviasales.template:aviasalesSdkTemplate:2.1.6'
+//	compile 'ru.aviasales.template:appodeallib:2.1.6'
 //	compile 'ru.aviasales:appodeallib:1.3'
 
     compile "com.google.android.gms:play-services-ads:$rootProject.ext.gmsVersion"

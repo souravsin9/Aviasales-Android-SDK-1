@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+project.group = GROUP
+version = VERSION_NAME
+
 android {
 	compileSdkVersion rootProject.ext.compileSdkVersion
 	buildToolsVersion rootProject.ext.buildToolsVersion
@@ -7,14 +10,6 @@ android {
 	defaultConfig {
 		minSdkVersion 9
 		targetSdkVersion rootProject.ext.targetSdkVersion
-		versionCode 2
-		versionName "1.1"
-	}
-	buildTypes {
-		release {
-			minifyEnabled false
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-		}
 	}
 }
 
@@ -25,17 +20,5 @@ dependencies {
 
 
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
 
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: "http://android.aviasales.ru/repositories") {
-				authentication(userName: mavenUser, password: mavenPassword)
-			}
-			pom.version = "1.1"
-			pom.artifactId = "aviasalesExpandedlistview"
-			pom.groupId = "ru.aviasales.expandedlistview"
-		}
-	}
-}
+apply from: rootProject.file('release.gradle')
