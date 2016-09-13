@@ -4,13 +4,6 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url 'http://android.aviasales.ru/repositories/' }
-    maven {
-        url 'http://aviasalesandroid.fvds.ru:8080/nexus/content/repositories/as_android_beta/'
-        credentials {
-            username mavenUser
-            password mavenPassword
-        }
-    }
 }
 
 android {
