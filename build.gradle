@@ -19,9 +19,9 @@ allprojects {
 }
 
 ext {
-	compileSdkVersion = 23
-	targetSdkVersion = 23
-	buildToolsVersion = '24 rc3'
+	compileSdkVersion = 24
+	targetSdkVersion = 24
+	buildToolsVersion = '24.0.0'
 	gmsVersion = '8.4.0'
 	supportVersion = '24.2.0'
 }
